@@ -1,95 +1,92 @@
-import React, {useEffect} from 'react'
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function NetflixOriginals() {
+  const [isLoading, setisLoading] = useState(true);
+  const [movie, setMovie] = useState([]);
 
-useEffect(() => {
+  const img_url = "https://image.tmdb.org/t/p/original";
 
-  // ** Function that fetches Netflix Originals **
-  function GetOriginals() {
+  useEffect(() => {
+    // ** Function that fetches Netflix Originals **
+    function GetOriginals() {
+      let URL =
+        "https://api.themoviedb.org/3/discover/tv?api_key=19f84e11932abbc79e6d83f82d6d1045&with_networks=213";
 
-    let URL = 'https://api.themoviedb.org/3/discover/tv?api_key=19f84e11932abbc79e6d83f82d6d1045&with_networks=213';
-  
-    fetchMovies(URL, ".original__movies", 'poster_path');
-  
-  
+      fetchMovies(URL);
     }
 
-  // ** Helper function that makes dynamic API calls **
-  function fetchMovies(url, dom_element, path_type) {
-    // Use Fetch with the url passed down 
-    fetch(url)
-    .then(response => {
-      if (response.ok) {
-        return response.json()
-      } else {
-        throw new Error('something went wrong')
-      }
-    })
-    // Within Fetch get the response and call showMovies() with the data , dom_element, and path type
-    .then(data => {
-      showMovies(data, dom_element, path_type)
-    })
-    .catch(error_data => {
-      console.log(error_data)
-    })
-  
-  }
-  
-  //  ** Function that displays the movies to the DOM **
-  const showMovies = (movies, dom_element, path_type) => {
-    
-    // Create a variable that grabs id or class
-    let moviesEl = document.querySelector(dom_element)
-  
-    // Loop through object
-  
-    for (let movie of movies.results) {
-
-      // Within loop create an img element
-      let imageElement = document.createElement('img')
-  
-      // Set attribute
-      imageElement.setAttribute('data-id', movie.id, )
-  
-      // Set source
-      imageElement.src = `https://image.tmdb.org/t/p/original${movie[path_type]}`
-  
-      // Append the imageElement to the dom_element selected
-      moviesEl.appendChild(imageElement)
+    // ** Helper function that makes dynamic API calls **
+    async function fetchMovies(url) {
+      // Use Fetch with the url passed down
+      const result = await axios.get(url);
+      setMovie(result.data.results);
+      setisLoading(false);
     }
-  } 
-  GetOriginals();
 
-}, [])
+    GetOriginals();
+  }, []);
 
-const slideLeft = () => {
-  var slider = document.querySelector('.original__movies');
-  slider.scrollLeft = slider.scrollLeft - 500;
-};
+  const slideLeft = () => {
+    var slider = document.querySelector(".original__movies");
+    slider.scrollLeft = slider.scrollLeft - 500;
+  };
 
-const slideRight = () => {
-  var slider = document.querySelector('.original__movies');
-  slider.scrollLeft = slider.scrollLeft + 500;
-};
+  const slideRight = () => {
+    var slider = document.querySelector(".original__movies");
+    slider.scrollLeft = slider.scrollLeft + 500;
+  };
 
-  return (
+  return isLoading ? (
     <>
-    <div class="netflixOriginals">
+      <div class="netflixOriginals">
         <div class="original__header">
-        <h2>NETFLIX ORIGINALS</h2>
+          <h2>NETFLIX ORIGINALS</h2>
         </div>
         <div class="original__movies">
-        {/*<!-- Orignal Movies List -->*/}
-        
-            <button class="container__arrows--left" onClick={slideLeft}>
-            <i class="fas fa-chevron-left"></i>
-            </button>
-            <button class="container__arrows--right" onClick={slideRight}>
-            <i class="fas fa-chevron-right"></i>
-            </button>
-        
+          <div className="Loading--container">
+            <div className="loading"></div>
+          </div>
+          <div className="Loading--container">
+            <div className="loading"></div>
+          </div>
+          <div className="Loading--container">
+            <div className="loading"></div>
+          </div>
+          <div className="Loading--container">
+            <div className="loading"></div>
+          </div>
+          <div className="Loading--container">
+            <div className="loading"></div>
+          </div>
+          <div className="Loading--container">
+            <div className="loading"></div>
+          </div>
+          <div className="Loading--container">
+            <div className="loading"></div>
+          </div>
         </div>
-    </div>
+      </div>
     </>
-  )
+  ) : (
+    <>
+      <div className="netflixOriginals">
+        <div className="original__header">
+          <h2>NETFLIX ORIGINALS</h2>
+        </div>
+        <div className="original__movies">
+          {movie.map((movies, index) => (
+            <img key={index} src={`${img_url}${movies.poster_path}`} />
+          ))}
+
+          <button className="container__arrows--left" onClick={slideLeft}>
+            <i className="fas fa-chevron-left"></i>
+          </button>
+          <button className="container__arrows--right" onClick={slideRight}>
+            <i className="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </>
+  );
 }

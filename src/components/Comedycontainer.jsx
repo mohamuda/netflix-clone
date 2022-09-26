@@ -1,95 +1,86 @@
-import React, {useEffect} from 'react'
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function Comedycontainerr() {
+  const [isLoading, setisLoading] = useState(false);
+  const [movie, setMovie] = useState([]);
 
+  const img_url = "https://image.tmdb.org/t/p/original";
 
-useEffect(() => {
+  useEffect(() => {
+    function ComedyMovies() {
+      let URL =
+        "https://api.themoviedb.org/3/discover/movie?api_key=6c90eb1cbe9a729f47eba5b53199555e&with_genres=35";
 
-function ComedyMovies() {
-
-  let URL = 'https://api.themoviedb.org/3/discover/movie?api_key=6c90eb1cbe9a729f47eba5b53199555e&with_genres=35';
-
- fetchMovies(URL, '#Comedy_Movies', 'backdrop_path');
-
-}  
-
-  // ** Helper function that makes dynamic API calls **
-  function fetchMovies(url, dom_element, path_type) {
-    // Use Fetch with the url passed down 
-    fetch(url)
-    .then(response => {
-      if (response.ok) {
-        return response.json()
-      } else {
-        throw new Error('something went wrong')
-      }
-    })
-    // Within Fetch get the response and call showMovies() with the data , dom_element, and path type
-    .then(data => {
-      showMovies(data, dom_element, path_type)
-    })
-    .catch(error_data => {
-      console.log(error_data)
-    })
-  
-  }
-  
-  //  ** Function that displays the movies to the DOM **
-  const showMovies = (movies, dom_element, path_type) => {
-    
-    // Create a variable that grabs id or class
-    let moviesEl = document.querySelector(dom_element)
-  
-    // Loop through object
-  
-    for (let movie of movies.results) {
-
-      // Within loop create an img element
-      let imageElement = document.createElement('img')
-  
-      // Set attribute
-      imageElement.setAttribute('data-id', movie.id, )
-  
-      // Set source
-      imageElement.src = `https://image.tmdb.org/t/p/original${movie[path_type]}`
-  
- 
-      // Append the imageElement to the dom_element selected
-      moviesEl.appendChild(imageElement)
+      fetchMovies(URL);
     }
-  } 
-  ComedyMovies();
 
-}, [])  
-  
-const slideLeft = () => {
-  var slider = document.querySelector('#Comedy_Movies');
-  slider.scrollLeft = slider.scrollLeft - 500;
-};
+    // ** Helper function that makes dynamic API calls **
+    async function fetchMovies(url) {
+      // Use Fetch with the url passed down
+      const result = await axios.get(url);
+      setMovie(result.data.results);
+      setisLoading(false);
+    }
 
-const slideRight = () => {
-  var slider = document.querySelector('#Comedy_Movies');
-  slider.scrollLeft = slider.scrollLeft + 500;
-};
+    ComedyMovies();
+  }, []);
 
-  return (
+  const slideLeft = () => {
+    var slider = document.querySelector("#Comedy_Movies");
+    slider.scrollLeft = slider.scrollLeft - 500;
+  };
 
+  const slideRight = () => {
+    var slider = document.querySelector("#Comedy_Movies");
+    slider.scrollLeft = slider.scrollLeft + 500;
+  };
 
-    
+  return isLoading ? (
     <>
-    <div class="movies__header">
+      <div className="movies__header">
         <h2>Comedy Movies</h2>
-    </div>
-        <div id="Comedy_Movies" class="movies__container">
-          {/*<!-- Top Rated Movies List Here -->*/}
-          <button class="ComedyMovies__arrows--left" onClick={slideLeft}>
-            <i class="fas fa-chevron-left"></i>
-          </button>
-          <button class="ComedyMovies__arrows--right" onClick={slideRight}>
-            <i class="fas fa-chevron-right"></i>
-          </button>
+      </div>
+      <div id="Comedy_Movies" className="movies__container">
+        <div className="Loading--container">
+          <div className="loading"></div>
         </div>
+        <div className="Loading--container">
+          <div className="loading"></div>
+        </div>
+        <div className="Loading--container">
+          <div className="loading"></div>
+        </div>
+        <div className="Loading--container">
+          <div className="loading"></div>
+        </div>
+        <div className="Loading--container">
+          <div className="loading"></div>
+        </div>
+        <div className="Loading--container">
+          <div className="loading"></div>
+        </div>
+        <div className="Loading--container">
+          <div className="loading"></div>
+        </div>
+      </div>
     </>
-
-  )
+  ) : (
+    <>
+      <div className="movies__header">
+        <h2>Comedy Movies</h2>
+      </div>
+      <div id="Comedy_Movies" className="movies__container">
+        {movie.map((movies, index) => (
+          <img key={index} src={`${img_url}${movies.backdrop_path}`} />
+        ))}
+        <button className="ComedyMovies__arrows--left" onClick={slideLeft}>
+          <i className="fas fa-chevron-left"></i>
+        </button>
+        <button className="ComedyMovies__arrows--right" onClick={slideRight}>
+          <i className="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </>
+  );
 }

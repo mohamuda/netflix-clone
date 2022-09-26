@@ -1,18 +1,30 @@
 import React from 'react'
 import logo from '../img/logo--netflixs.png'
+import account from '../img/Account-image.png'
 
 
 
 export default function Nav({toggleModal}) {
 
+const navbar = document.querySelector('.nav');
 
+const changeBackground = () => {
 
+    if (window.scrollY > 100) {
+        navbar.classList.add('nav-active');
+    } else {
+        navbar.classList.remove('nav-active');
+    }
 
-  return ( <div class="nav">
-    <img class="nav__logo" src={logo}></img>
-    <div class="nav__design">
-      <div class="nav__list">
-        <ul class="nav__list--links">
+}
+
+window.addEventListener('scroll', changeBackground);
+
+  return ( <div className="nav">
+    <img className="nav__logo" src={logo}></img>
+    <div className="nav__design">
+      <div className="nav__list">
+        <ul className="nav__list--links">
           <li>Home</li>
           <li>TV Shows</li>
           <li>Movies</li>
@@ -20,11 +32,11 @@ export default function Nav({toggleModal}) {
           <li>My List</li>
         </ul>
       </div>
-      <div class="nav__setting">
-        <ul class="nav__setting--links">
-          <li><i class="fas fa-search"></i></li>
-          <li><i class="fas fa-bell"></i></li>
-          <li>AM</li>
+      <div className="nav__setting">
+        <ul className="nav__setting--links">
+          <li><i className="fas fa-search"></i></li>
+          <li><i className="fas fa-bell"></i></li>
+          <li><img className='account--image' src={account}/></li>
         </ul>
       </div>
     </div>

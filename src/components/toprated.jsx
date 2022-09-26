@@ -1,93 +1,85 @@
-import React, {useEffect} from 'react'
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function Toprated() {
+  const [isLoading, setisLoading] = useState(false);
+  const [movie, setMovie] = useState([]);
 
-useEffect(() => {
+  const img_url = "https://image.tmdb.org/t/p/original";
 
-      const getTopRated = () => {
+  useEffect(() => {
+    const getTopRated = () => {
+      let URL =
+        "https://api.themoviedb.org/3/movie/top_rated?api_key=19f84e11932abbc79e6d83f82d6d1045&language=en-US&page=1";
 
-        let URL = 'https://api.themoviedb.org/3/movie/top_rated?api_key=19f84e11932abbc79e6d83f82d6d1045&language=en-US&page=1';
+      fetchMovies(URL);
+    };
 
-      fetchMovies(URL, '#top_rated', 'backdrop_path');
-
-      } 
-
-    getTopRated();
-
-  
-
-  // ** Helper function that makes dynamic API calls **
-  function fetchMovies(url, dom_element, path_type) {
-    // Use Fetch with the url passed down 
-    fetch(url)
-    .then(response => {
-      if (response.ok) {
-        return response.json()
-      } else {
-        throw new Error('something went wrong')
-      }
-    })
-    // Within Fetch get the response and call showMovies() with the data , dom_element, and path type
-    .then(data => {
-      showMovies(data, dom_element, path_type)
-    })
-  
-  }
-
-
-  
-  //  ** Function that displays the movies to the DOM **
-  const showMovies = (movies, dom_element, path_type) => {
-    
-    // Create a variable that grabs id or class
-    let moviesEl = document.querySelector(dom_element)
-  
-    // Loop through object
-  
-    for (let movie of movies.results) {
-
-      // Within loop create an img element
-      let imageElement = document.createElement('img')
-  
-      // Set attribute
-      imageElement.setAttribute('data-id', movie.id, )
-  
-      // Set source
-      imageElement.src = `https://image.tmdb.org/t/p/original${movie[path_type]}`
-  
-      // Append the imageElement to the dom_element selected
-      moviesEl.appendChild(imageElement)
+    // ** Helper function that makes dynamic API calls **
+    async function fetchMovies(url) {
+      // Use Fetch with the url passed down
+      const result = await axios.get(url);
+      setMovie(result.data.results);
+      setisLoading(false);
     }
-  } 
+    getTopRated();
+  }, []);
 
-}, [])
+  const slideLeft = () => {
+    var slider = document.querySelector("#top_rated");
+    slider.scrollLeft = slider.scrollLeft - 500;
+  };
 
-const slideLeft = () => {
-  var slider = document.querySelector('#top_rated');
-  slider.scrollLeft = slider.scrollLeft - 500;
-};
+  const slideRight = () => {
+    var slider = document.querySelector("#top_rated");
+    slider.scrollLeft = slider.scrollLeft + 500;
+  };
 
-const slideRight = () => {
-  var slider = document.querySelector('#top_rated');
-  slider.scrollLeft = slider.scrollLeft + 500;
-};
-
-  return (
-
+  return isLoading ? (
     <>
-        <div class="movies__header">
-          <h2>Top Rated</h2>
+      <div className="movies__header">
+        <h2>Top Rated</h2>
+      </div>
+      <div id="Comedy_Movies" className="movies__container">
+        <div className="Loading--container">
+          <div className="loading"></div>
         </div>
-        <div id="top_rated" class="movies__container">
-          {/*<!-- Top Rated Movies List Here -->*/}
-          <button class="top_rated__arrows--left" onClick={slideLeft}>
-            <i class="fas fa-chevron-left"></i>
-          </button>
-          <button class="top_rated__arrows--right"onClick={slideRight}>
-            <i class="fas fa-chevron-right"></i>
-          </button>
+        <div className="Loading--container">
+          <div className="loading"></div>
         </div>
+        <div className="Loading--container">
+          <div className="loading"></div>
+        </div>
+        <div className="Loading--container">
+          <div className="loading"></div>
+        </div>
+        <div className="Loading--container">
+          <div className="loading"></div>
+        </div>
+        <div className="Loading--container">
+          <div className="loading"></div>
+        </div>
+        <div className="Loading--container">
+          <div className="loading"></div>
+        </div>
+      </div>
     </>
-
-  )
+  ) : (
+    <>
+      <div className="movies__header">
+        <h2>Top Rated</h2>
+      </div>
+      <div id="top_rated" className="movies__container">
+        {movie.map((movies, index) => (
+          <img key={index} src={`${img_url}${movies.backdrop_path}`} />
+        ))}
+        <button className="top_rated__arrows--left" onClick={slideLeft}>
+          <i className="fas fa-chevron-left"></i>
+        </button>
+        <button className="top_rated__arrows--right" onClick={slideRight}>
+          <i className="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </>
+  );
 }
