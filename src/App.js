@@ -16,13 +16,13 @@ function App() {
     setModal(!modal);
   };
 
-  window.addEventListener("resize", (event) => {
-    onresize();
-  });
-
-  const onresize = (event) => {
-    setModal(false);
+  const onResize = () => {
+    if (window.innerWidth >= 800) {
+      setModal(false);
+    }
   };
+
+  window.addEventListener("resize", onResize);
 
   return modal ? (
     <div className="App">

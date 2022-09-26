@@ -15,7 +15,6 @@ export default function Featured() {
           // every refresh the movie will be change
           const setMovie =
             data.results[Math.floor(Math.random() * data.results.length - 1)];
-          console.log(setMovie);
 
           const img_url = "https://image.tmdb.org/t/p/original";
           let banner = document.querySelector(".featured");
